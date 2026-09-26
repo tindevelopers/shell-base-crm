@@ -2,19 +2,10 @@
   "description": "Release-target sentinel config for shared-client-care-hub (schema-crm, domain-contacts, domain-campaigns, ui-crm, schema-support, domain-pipeline, domain-support). Ported from shell-base-admin's release machinery (T8 precedent in that repo's docs/plans/2026-09-22-shared-hubs-baseline.md). Describes THIS hub's packages only — no other hub's knownDrift or pins carried over (see that plan's R1 for why that matters: a stale domain-support knownDrift entry copied verbatim from shell-base-admin once blocked an unrelated adapter-kit release in shared-integration-hub).",
   "capturedAt": "2026-09-26T12:39:39Z",
   "governance": {
-    "pinsLifecycleClosed": false,
-    "pinLifecycle": "Ruling P3-12 (PUBLISH.md): pins holds PLANNED publishes only. domain-support@5.0.0 (owner-authorized 2026-09-26) published 2026-09-26T16:21:32Z to next via release.yml run 36255059090 on main f0bc809, registry-verified, and its pin is RETIRED here with a missionPublishes row. No planned pin remains, so pinsLifecycleClosed is true; the next owner-authorized publish adds its pin and sets this back to false. Reopened 2026-09-26 for two owner-authorized first releases: schema-support@1.0.0 and domain-pipeline@1.0.0; each pin is retired, and pinsLifecycleClosed set back to true, in the evidence commit after its publish is registry-verified. schema-support@1.0.0 and domain-pipeline@1.0.0 published 2026-09-26T20:16Z (release.yml run 36268836644); both pins RETIRED. domain-pipeline@1.0.0 is defective (workspace:^ dependency), so a corrective domain-pipeline@1.0.1 pin is open; pinsLifecycleClosed stays false until it is published and retired. domain-support latest promoted 4.0.0 -> 5.0.0 on 2026-09-26 (promote.yml run 36269345526)."
+    "pinsLifecycleClosed": true,
+    "pinLifecycle": "Ruling P3-12 (PUBLISH.md): pins holds PLANNED publishes only. domain-support@5.0.0 (owner-authorized 2026-09-26) published 2026-09-26T16:21:32Z to next via release.yml run 36255059090 on main f0bc809, registry-verified, and its pin is RETIRED here with a missionPublishes row. No planned pin remains, so pinsLifecycleClosed is true; the next owner-authorized publish adds its pin and sets this back to false. Reopened 2026-09-26 for two owner-authorized first releases: schema-support@1.0.0 and domain-pipeline@1.0.0; each pin is retired, and pinsLifecycleClosed set back to true, in the evidence commit after its publish is registry-verified. schema-support@1.0.0 and domain-pipeline@1.0.0 published 2026-09-26T20:16Z (release.yml run 36268836644); both pins RETIRED. domain-pipeline@1.0.0 is defective (workspace:^ dependency), so a corrective domain-pipeline@1.0.1 pin is open; pinsLifecycleClosed stays false until it is published and retired. domain-support latest promoted 4.0.0 -> 5.0.0 on 2026-09-26 (promote.yml run 36269345526). domain-pipeline@1.0.1 published 2026-09-26T20:33:22Z (release.yml run 36269827483), registry-verified and installed in a clean consumer; its pin is RETIRED and no pin remains, so pinsLifecycleClosed is true."
   },
-  "pins": [
-    {
-      "package": "@tindevelopers/domain-pipeline",
-      "version": "1.0.1",
-      "bump": "patch",
-      "milestone": "client-care-first-releases",
-      "status": "planned",
-      "content": "Corrective patch for the defective domain-pipeline@1.0.0 (see its missionPublishes row), same source, under the owner's 2026-09-26 authorization of this package's first release. PUBLISH.md section 4: a bad version gets a strictly higher corrective patch."
-    }
-  ],
+  "pins": [],
   "neverPublish": [],
   "knownDrift": [],
   "snapshot": {
@@ -123,13 +114,15 @@
       },
       "@tindevelopers/domain-pipeline": {
         "versions": [
-          "1.0.0"
+          "1.0.0",
+          "1.0.1"
         ],
         "distTags": {
-          "next": "1.0.0"
+          "next": "1.0.1"
         },
         "publishTimes": {
-          "1.0.0": "2026-09-26T20:16:38Z"
+          "1.0.0": "2026-09-26T20:16:38Z",
+          "1.0.1": "2026-09-26T20:33:22Z"
         },
         "missionPublishes": [
           {
@@ -140,6 +133,14 @@
             "tarballSha256": "9eb768b0e7ebadab8ce50d5ff2489c2657f375e02c25dd19add0183aa3627bc1",
             "defective": "DO NOT USE. release.yml packed and published with npm, which did not rewrite the workspace dependency: the published manifest declares \"@tindevelopers/schema-crm\": \"workspace:^\" and cannot be installed outside this repo. Immutable; superseded by the corrective 1.0.1 (PUBLISH.md section 4). release.yml now packs with pnpm, refuses any packed manifest containing workspace:, and publishes that exact tarball.",
             "distTagTransition": "first publish: next=1.0.0; no latest tag set"
+          },
+          {
+            "version": "1.0.1",
+            "publishedAt": "2026-09-26T20:33:22Z",
+            "mechanism": "release.yml run 36269827483 on main 213621f (PR #15: pnpm pack, workspace: guard, publish the packed tarball); corrective patch under the owner's 2026-09-26 first-release authorization",
+            "registryIntegrity": "sha512-MheVTmr5EcN0qhtEINJ1X1/DypDiY3snSVRGGY0a9U+QVvHen5xsBFCPBuL/0YHeyeHh1FFx4WkrmTj3sOQcYw==",
+            "verification": "Registry manifest depends on @tindevelopers/schema-crm ^1.2.0 (no workspace:). Clean consumer outside the repo: npm install of domain-pipeline@1.0.1, schema-support@1.0.0 and domain-support@5.0.0 succeeds and resolves schema-crm@1.2.0.",
+            "distTagTransition": "next moved 1.0.0 -> 1.0.1; no latest tag"
           }
         ]
       },

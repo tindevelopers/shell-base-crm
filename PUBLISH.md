@@ -38,8 +38,10 @@ registry snapshot the check compares against. The sentinel
 node scripts/check-release-target.mjs
 ```
 
-This hub's `release-targets.json` pins one target today: the corrective
-**`@tindevelopers/domain-pipeline@1.0.1`**. **Do not use `domain-pipeline@1.0.0`**:
+This hub's `release-targets.json` has no open pins today
+(`governance.pinsLifecycleClosed: true`). The corrective
+**`@tindevelopers/domain-pipeline@1.0.1`** was published 2026-09-26
+(`release.yml` run 36269827483) and its pin retired. **Do not use `domain-pipeline@1.0.0`**:
 `release.yml` published it with npm, which left a `workspace:^` dependency in
 its manifest, so it cannot be installed. `release.yml` now packs with pnpm and
 refuses a packed manifest that still says `workspace:`.
