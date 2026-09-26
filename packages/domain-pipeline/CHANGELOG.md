@@ -1,5 +1,13 @@
 # @tindevelopers/domain-pipeline
 
+## 1.0.1
+
+Corrective republish of 1.0.0 under a new version; the source is unchanged.
+**Do not use 1.0.0**: it was published by `npm publish`, which left the
+`"@tindevelopers/schema-crm": "workspace:^"` dependency unrewritten, so it
+cannot be installed outside this repo. 1.0.1 is packed with `pnpm pack`, and
+its manifest depends on `@tindevelopers/schema-crm ^1.2.0`.
+
 ## 1.0.0
 
 Initial extraction of Konnect's CRM pipeline (companies, deal stages, deals,
