@@ -1,6 +1,6 @@
 # @tindevelopers/schema-support
 
-## Unreleased
+## 1.0.0
 
 **BREAKING.** Adopts Konnect's owner-scoped support escalation chain
 (ADR-0002: this package is the schema owner for the tables below) and

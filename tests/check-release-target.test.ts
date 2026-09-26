@@ -104,10 +104,13 @@ function configWithStandInPin(): Config {
 }
 
 describe("release-target sentinel — committed configuration (shared-client-care-hub)", () => {
-  it("has no open pins: domain-support@5.0.0 is published, recorded and retired", () => {
+  it("pins exactly the two owner-authorized first releases; domain-support@5.0.0 is published, recorded and retired", () => {
     const config = committedConfig();
-    expect(config.pins).toEqual([]);
-    expect(config.governance.pinsLifecycleClosed).toBe(true);
+    expect(config.pins.map((p: any) => `${p.package}@${p.version}`).sort()).toEqual([
+      "@tindevelopers/domain-pipeline@1.0.0",
+      "@tindevelopers/schema-support@1.0.0",
+    ]);
+    expect(config.governance.pinsLifecycleClosed).toBe(false);
     const snap = config.snapshot.packages["@tindevelopers/domain-support"];
     expect(snap.versions).toContain("5.0.0");
     expect(snap.distTags.next).toBe("5.0.0");

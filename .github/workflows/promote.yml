@@ -1,0 +1,46 @@
+name: Promote
+
+# Moves a published version from `next` to `latest` with scripts/promote.mjs
+# (PUBLISH.md section 3). A dist-tag move only: nothing is built or published.
+# Run by hand; the owner authorizes each promotion.
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: "Package, short (domain-support) or full (@tindevelopers/domain-support)"
+        required: true
+        type: string
+      version:
+        description: "Published version to make latest"
+        required: true
+        type: string
+      dry_run:
+        description: "Run the guards only; move no tag"
+        required: true
+        type: boolean
+        default: true
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          registry-url: 'https://npm.pkg.github.com'
+      - name: Promote
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+          PACKAGE: ${{ inputs.package }}
+          VERSION: ${{ inputs.version }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          if [ "$DRY_RUN" = "true" ]; then
+            node scripts/promote.mjs "$PACKAGE" "$VERSION" --dry-run
+          else
+            node scripts/promote.mjs "$PACKAGE" "$VERSION"
+          fi

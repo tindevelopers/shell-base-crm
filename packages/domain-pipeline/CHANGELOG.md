@@ -1,6 +1,6 @@
 # @tindevelopers/domain-pipeline
 
-## Unreleased
+## 1.0.0
 
 Initial extraction of Konnect's CRM pipeline (companies, deal stages, deals,
 tasks, notes, activities — `apps/app/app/actions/crm/{companies,deals,tasks,notes,activities}.ts`)

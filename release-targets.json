@@ -2,10 +2,27 @@
   "description": "Release-target sentinel config for shared-client-care-hub (schema-crm, domain-contacts, domain-campaigns, ui-crm, schema-support, domain-pipeline, domain-support). Ported from shell-base-admin's release machinery (T8 precedent in that repo's docs/plans/2026-09-22-shared-hubs-baseline.md). Describes THIS hub's packages only — no other hub's knownDrift or pins carried over (see that plan's R1 for why that matters: a stale domain-support knownDrift entry copied verbatim from shell-base-admin once blocked an unrelated adapter-kit release in shared-integration-hub).",
   "capturedAt": "2026-09-26T12:39:39Z",
   "governance": {
-    "pinsLifecycleClosed": true,
-    "pinLifecycle": "Ruling P3-12 (PUBLISH.md): pins holds PLANNED publishes only. domain-support@5.0.0 (owner-authorized 2026-09-26) published 2026-09-26T16:21:32Z to next via release.yml run 36255059090 on main f0bc809, registry-verified, and its pin is RETIRED here with a missionPublishes row. No planned pin remains, so pinsLifecycleClosed is true; the next owner-authorized publish adds its pin and sets this back to false."
+    "pinsLifecycleClosed": false,
+    "pinLifecycle": "Ruling P3-12 (PUBLISH.md): pins holds PLANNED publishes only. domain-support@5.0.0 (owner-authorized 2026-09-26) published 2026-09-26T16:21:32Z to next via release.yml run 36255059090 on main f0bc809, registry-verified, and its pin is RETIRED here with a missionPublishes row. No planned pin remains, so pinsLifecycleClosed is true; the next owner-authorized publish adds its pin and sets this back to false. Reopened 2026-09-26 for two owner-authorized first releases: schema-support@1.0.0 and domain-pipeline@1.0.0; each pin is retired, and pinsLifecycleClosed set back to true, in the evidence commit after its publish is registry-verified."
   },
-  "pins": [],
+  "pins": [
+    {
+      "package": "@tindevelopers/schema-support",
+      "version": "1.0.0",
+      "bump": "major",
+      "milestone": "client-care-first-releases",
+      "status": "planned",
+      "content": "Owner-authorized 2026-09-26 (chat: \"Approve 2\"): first release, published to the next dist-tag. The name has never been published (npm view E404), so 1.0.0 is free. Owner-scoped support schema: 9 tables, 9 migrations adopted byte-identical from konnect-caas-base."
+    },
+    {
+      "package": "@tindevelopers/domain-pipeline",
+      "version": "1.0.0",
+      "bump": "major",
+      "milestone": "client-care-first-releases",
+      "status": "planned",
+      "content": "Owner-authorized 2026-09-26 (chat: \"Approve 2\"): first release, published to the next dist-tag. The name has never been published (npm view E404), so 1.0.0 is free. CRM pipeline stores over an injected Supabase client; depends on @tindevelopers/schema-crm ^1.2.0 (published 1.2.0 verified to export every symbol it imports)."
+    }
+  ],
   "neverPublish": [],
   "knownDrift": [],
   "snapshot": {
