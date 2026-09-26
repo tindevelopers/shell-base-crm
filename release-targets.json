@@ -2,25 +2,26 @@
   "description": "Release-target sentinel config for shared-client-care-hub (schema-crm, domain-contacts, domain-campaigns, ui-crm, schema-support, domain-pipeline, domain-support). Ported from shell-base-admin's release machinery (T8 precedent in that repo's docs/plans/2026-09-22-shared-hubs-baseline.md). Describes THIS hub's packages only — no other hub's knownDrift or pins carried over (see that plan's R1 for why that matters: a stale domain-support knownDrift entry copied verbatim from shell-base-admin once blocked an unrelated adapter-kit release in shared-integration-hub).",
   "capturedAt": "2026-09-26T12:39:39Z",
   "governance": {
-    "pinsLifecycleClosed": false
+    "pinsLifecycleClosed": true,
+    "pinLifecycle": "Ruling P3-12 (PUBLISH.md): pins holds PLANNED publishes only. domain-support@5.0.0 (owner-authorized 2026-09-26) published 2026-09-26T16:21:32Z to next via release.yml run 36255059090 on main f0bc809, registry-verified, and its pin is RETIRED here with a missionPublishes row. No planned pin remains, so pinsLifecycleClosed is true; the next owner-authorized publish adds its pin and sets this back to false."
   },
-  "pins": [
-    {
-      "package": "@tindevelopers/domain-support",
-      "version": "5.0.0",
-      "bump": "major",
-      "milestone": "shared-client-care-hub-first-publish",
-      "status": "planned",
-      "content": "Owner-authorized 2026-09-26 (chat): publish @tindevelopers/domain-support@5.0.0 to the next dist-tag. Registry latest/next is 4.0.0 (published from shell-base-admin); 3.0.0 and 4.0.0 are already taken and immutable, so this hub's first release starts at 5.0.0. Workspace is already at 5.0.0 (PR #11, commit 4f919b7) — the ready-to-publish state (ruling P3-11): condition 2 needs no bump arithmetic since workspace === pin exactly."
-    }
-  ],
+  "pins": [],
   "neverPublish": [],
   "knownDrift": [],
   "snapshot": {
     "packages": {
       "@tindevelopers/schema-crm": {
-        "versions": ["1.0.0", "1.1.0-rc.0", "1.1.0-rc.1", "1.2.0"],
-        "distTags": { "latest": "1.2.0", "next": "1.2.0", "rc": "1.1.0-rc.1" },
+        "versions": [
+          "1.0.0",
+          "1.1.0-rc.0",
+          "1.1.0-rc.1",
+          "1.2.0"
+        ],
+        "distTags": {
+          "latest": "1.2.0",
+          "next": "1.2.0",
+          "rc": "1.1.0-rc.1"
+        },
         "publishTimes": {
           "1.0.0": "2026-09-13T11:14:55Z",
           "1.1.0-rc.0": "2026-09-21T21:40:04Z",
@@ -29,8 +30,19 @@
         }
       },
       "@tindevelopers/domain-contacts": {
-        "versions": ["1.0.0", "1.0.1", "1.1.0", "1.2.0-rc.0", "1.2.0-rc.1", "1.2.0"],
-        "distTags": { "latest": "1.2.0", "next": "1.2.0", "rc": "1.2.0-rc.1" },
+        "versions": [
+          "1.0.0",
+          "1.0.1",
+          "1.1.0",
+          "1.2.0-rc.0",
+          "1.2.0-rc.1",
+          "1.2.0"
+        ],
+        "distTags": {
+          "latest": "1.2.0",
+          "next": "1.2.0",
+          "rc": "1.2.0-rc.1"
+        },
         "publishTimes": {
           "1.0.0": "2026-09-13T12:28:39Z",
           "1.0.1": "2026-09-13T15:43:51Z",
@@ -41,8 +53,17 @@
         }
       },
       "@tindevelopers/domain-campaigns": {
-        "versions": ["1.0.0", "1.1.0-rc.0", "1.1.0-rc.1", "1.1.0"],
-        "distTags": { "latest": "1.1.0", "next": "1.1.0", "rc": "1.1.0-rc.1" },
+        "versions": [
+          "1.0.0",
+          "1.1.0-rc.0",
+          "1.1.0-rc.1",
+          "1.1.0"
+        ],
+        "distTags": {
+          "latest": "1.1.0",
+          "next": "1.1.0",
+          "rc": "1.1.0-rc.1"
+        },
         "publishTimes": {
           "1.0.0": "2026-09-13T13:30:05Z",
           "1.1.0-rc.0": "2026-09-21T21:40:04Z",
@@ -51,8 +72,17 @@
         }
       },
       "@tindevelopers/ui-crm": {
-        "versions": ["1.0.0-rc.0", "1.0.0-rc.1", "1.0.0-rc.2", "1.0.0"],
-        "distTags": { "latest": "1.0.0", "next": "1.0.0", "rc": "1.0.0-rc.2" },
+        "versions": [
+          "1.0.0-rc.0",
+          "1.0.0-rc.1",
+          "1.0.0-rc.2",
+          "1.0.0"
+        ],
+        "distTags": {
+          "latest": "1.0.0",
+          "next": "1.0.0",
+          "rc": "1.0.0-rc.2"
+        },
         "publishTimes": {
           "1.0.0-rc.0": "2026-09-21T21:40:04Z",
           "1.0.0-rc.1": "2026-09-21T21:46:44Z",
@@ -71,14 +101,25 @@
         "publishTimes": {}
       },
       "@tindevelopers/domain-support": {
-        "versions": ["1.0.0", "2.0.0", "2.0.1", "3.0.0", "4.0.0"],
-        "distTags": { "latest": "4.0.0", "next": "4.0.0" },
+        "versions": [
+          "1.0.0",
+          "2.0.0",
+          "2.0.1",
+          "3.0.0",
+          "4.0.0",
+          "5.0.0"
+        ],
+        "distTags": {
+          "latest": "4.0.0",
+          "next": "5.0.0"
+        },
         "publishTimes": {
           "1.0.0": "2026-09-11T07:36:38Z",
           "2.0.0": "2026-09-16T20:59:20Z",
           "2.0.1": "2026-09-21T11:33:47Z",
           "3.0.0": "2026-09-24T22:50:36Z",
-          "4.0.0": "2026-09-25T19:44:01Z"
+          "4.0.0": "2026-09-25T19:44:01Z",
+          "5.0.0": "2026-09-26T16:21:32Z"
         },
         "foreignPublishes": [
           {
@@ -90,6 +131,17 @@
             "version": "4.0.0",
             "publishedAt": "2026-09-25T19:44:01Z",
             "provenance": "Published from shell-base-admin, not this hub; registry latest/next at capture time. Immutable, never republished. This hub's first publish starts at 5.0.0 (see pins)."
+          }
+        ],
+        "missionPublishes": [
+          {
+            "version": "5.0.0",
+            "publishedAt": "2026-09-26T16:21:32Z",
+            "mechanism": "release.yml run 36255059090 (workflow_run after CI run 36243875130 attempt 2, green) on main f0bc809 (PR #11 machinery + PR #12 quality order); owner-authorized 2026-09-26",
+            "registryIntegrity": "sha512-70gGx8qS5Te9vJCITcCFf2IDCVXuODy0O5sRTe/ufCHmILlEJhnc6sO+y3NwKbrVOm2KvVlnhs7qGx7zEJE2ow==",
+            "tarballSha256": "8e363e5f6b94aa129c859e745a6c88e1d1348e341bab7fdefa24fefc1797f58e",
+            "verification": "Registry tarball content identical to a local pnpm pack of f0bc809 (all files byte-identical; package.json equal as JSON, key order differs between npm and pnpm pack).",
+            "distTagTransition": "next moved FORWARD 4.0.0 -> 5.0.0; latest UNMOVED at 4.0.0 (promotion is a separate owner-authorized act via scripts/promote.mjs)"
           }
         ]
       }

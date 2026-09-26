@@ -38,15 +38,17 @@ registry snapshot the check compares against. The sentinel
 node scripts/check-release-target.mjs
 ```
 
-This hub's `release-targets.json` pins exactly one target today:
-**`@tindevelopers/domain-support@5.0.0`**, owner-authorized 2026-09-26 (chat)
-to publish to the `next` dist-tag. The registry's `latest`/`next` is
-currently `4.0.0` — `3.0.0` and `4.0.0` were published from `shell-base-admin`
-before this hub took over ownership of the package; both are immutable and
-must never be republished. `neverPublish` and `knownDrift` are both empty:
-neither is needed to let the 5.0.0 pin through, and the config deliberately
-does **not** carry over another hub's `knownDrift` entry (see the note
-below).
+This hub's `release-targets.json` has no open pins today
+(`governance.pinsLifecycleClosed: true`). Its first release,
+**`@tindevelopers/domain-support@5.0.0`** (owner-authorized 2026-09-26), was
+published to `next` on 2026-09-26 by `release.yml` run 36255059090, and its
+pin is retired with a `missionPublishes` row. `latest` stays at `4.0.0` until
+the owner authorizes a promotion. `3.0.0` and `4.0.0` were published from
+`shell-base-admin` before this hub owned the package; both are immutable and
+must never be republished. `neverPublish` and `knownDrift` are both empty, and
+the config deliberately does **not** carry over another hub's `knownDrift`
+entry (see the note below). The next publish adds its pin and sets
+`pinsLifecycleClosed` back to `false` in its release PR.
 
 **ON SENTINEL FAILURE: STOP and return to the orchestrator.** Do not pick a
 different version, do not retry with a bump, do not move a dist-tag to make

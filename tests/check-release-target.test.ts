@@ -104,14 +104,14 @@ function configWithStandInPin(): Config {
 }
 
 describe("release-target sentinel — committed configuration (shared-client-care-hub)", () => {
-  it("pins exactly one target: domain-support@5.0.0, owner-authorized 2026-09-26", () => {
+  it("has no open pins: domain-support@5.0.0 is published, recorded and retired", () => {
     const config = committedConfig();
-    expect(config.pins).toHaveLength(1);
-    expect(config.pins[0]).toMatchObject({
-      package: "@tindevelopers/domain-support",
-      version: "5.0.0",
-      bump: "major",
-    });
+    expect(config.pins).toEqual([]);
+    expect(config.governance.pinsLifecycleClosed).toBe(true);
+    const snap = config.snapshot.packages["@tindevelopers/domain-support"];
+    expect(snap.versions).toContain("5.0.0");
+    expect(snap.distTags.next).toBe("5.0.0");
+    expect(snap.missionPublishes.map((m: any) => m.version)).toEqual(["5.0.0"]);
   });
 
   it("describes only this hub's packages — no knownDrift or pins carried over from another hub", () => {
@@ -123,8 +123,8 @@ describe("release-target sentinel — committed configuration (shared-client-car
     // actually requires one to let the 5.0.0 pin through (it doesn't —
     // see the passing leg below and the hazard self-proofs).
     expect(config.knownDrift).toEqual([]);
-    const pinnedPackages = new Set(config.pins.map((p: any) => p.package));
-    expect(pinnedPackages).toEqual(new Set(["@tindevelopers/domain-support"]));
+    const hubPackages = Object.keys(config.snapshot.packages);
+    for (const pin of config.pins) expect(hubPackages).toContain(pin.package);
   });
 
   it("passes against the committed snapshot with the real on-disk workspace versions (positive leg)", () => {
@@ -152,12 +152,15 @@ describe("release-target sentinel — negative self-proofs (fail closed)", () =>
 
   it("condition 1: fails on the hub's own real pin if domain-support@5.0.0 were published without retiring the pin", () => {
     const config = committedConfig();
-    // The exact blocking shape a future publish would create WITHOUT the
-    // same-commit pin retirement (PUBLISH.md's pin lifecycle rule): the
-    // pinned version IS on the registry but the pin is still in `pins`.
-    config.snapshot.packages["@tindevelopers/domain-support"].versions.push(
-      "5.0.0",
-    );
+    // The exact blocking shape a publish creates WITHOUT the same-commit pin
+    // retirement (PUBLISH.md's pin lifecycle rule): 5.0.0 IS on the registry
+    // (committed snapshot) but its pin is put back in `pins`.
+    config.pins.push({
+      package: "@tindevelopers/domain-support",
+      version: "5.0.0",
+      bump: "major",
+      milestone: "shared-client-care-hub-first-publish",
+    });
     const result = run(config);
     expect(result.ok).toBe(false);
     const failure = result.failures.find(
@@ -370,18 +373,18 @@ describe("release-target sentinel — negative self-proofs (fail closed)", () =>
     });
     config.pins.push({
       package: "@tindevelopers/domain-support",
-      version: "4.0.1",
+      version: "5.0.1",
       bump: "patch",
       milestone: "forbidden-test",
     });
-    const deps = baseDeps(config, { "@tindevelopers/domain-support": "4.0.1" });
+    const deps = baseDeps(config, { "@tindevelopers/domain-support": "5.0.1" });
     const result = run(config, deps);
     expect(result.ok).toBe(false);
     const failure = result.failures.find(
       (f: any) => f.condition === "hazard-domain-support",
     );
     expect(failure).toBeDefined();
-    expect(failure.message).toContain("4.0.1");
+    expect(failure.message).toContain("5.0.1");
     expect(failure.message).toMatch(/NOT authorized/);
   });
 
@@ -395,11 +398,11 @@ describe("release-target sentinel — negative self-proofs (fail closed)", () =>
     });
     config.pins.push({
       package: "@tindevelopers/domain-support",
-      version: "4.0.1",
+      version: "5.0.1",
       bump: "patch",
       milestone: "authorized-test",
     });
-    const deps = baseDeps(config, { "@tindevelopers/domain-support": "4.0.1" });
+    const deps = baseDeps(config, { "@tindevelopers/domain-support": "5.0.1" });
     const result = run(config, deps);
     expect(result.failures).toEqual([]);
     expect(result.ok).toBe(true);
