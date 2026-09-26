@@ -38,18 +38,18 @@ registry snapshot the check compares against. The sentinel
 node scripts/check-release-target.mjs
 ```
 
-This hub's `release-targets.json` pins two targets today: the first releases
-of **`@tindevelopers/schema-support@1.0.0`** and
-**`@tindevelopers/domain-pipeline@1.0.0`** (owner-authorized 2026-09-26), both
-to the `next` dist-tag. Its earlier release,
-**`@tindevelopers/domain-support@5.0.0`**, was published to `next` on
-2026-09-26 by `release.yml` run 36255059090, and its pin is retired with a
-`missionPublishes` row. `3.0.0` and `4.0.0` were published from
-`shell-base-admin` before this hub owned the package; both are immutable and
-must never be republished. `neverPublish` and `knownDrift` are both empty, and
-the config deliberately does **not** carry over another hub's `knownDrift`
-entry (see the note below). Each pin is retired, and `pinsLifecycleClosed` set
-back to `true` once none is open, in the evidence commit after its publish.
+This hub's `release-targets.json` pins one target today: the corrective
+**`@tindevelopers/domain-pipeline@1.0.1`**. **Do not use `domain-pipeline@1.0.0`**:
+`release.yml` published it with npm, which left a `workspace:^` dependency in
+its manifest, so it cannot be installed. `release.yml` now packs with pnpm and
+refuses a packed manifest that still says `workspace:`.
+`schema-support@1.0.0` and `domain-pipeline@1.0.0` (2026-09-26, `release.yml`
+run 36268836644) and `domain-support@5.0.0` (run 36255059090) are published
+and their pins retired; `domain-support` `latest` was promoted from `4.0.0` to
+`5.0.0` on 2026-09-26 (`promote.yml` run 36269345526). `3.0.0` and `4.0.0` of
+`domain-support` came from `shell-base-admin` and must never be republished.
+`neverPublish` and `knownDrift` are both empty, and the config deliberately
+does **not** carry over another hub's `knownDrift` entry (see the note below).
 
 **ON SENTINEL FAILURE: STOP and return to the orchestrator.** Do not pick a
 different version, do not retry with a bump, do not move a dist-tag to make

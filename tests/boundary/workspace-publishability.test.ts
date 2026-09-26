@@ -168,3 +168,34 @@ describe("pnpm pack rewrites workspace specifiers to concrete versions", () => {
     120_000,
   );
 });
+
+describe("release.yml ships what pnpm packed", () => {
+  // domain-pipeline@1.0.0 went out with `"@tindevelopers/schema-crm":
+  // "workspace:^"` because release.yml packed and published with npm, which
+  // never rewrites workspace specifiers. The workflow must pack with pnpm,
+  // refuse a packed manifest that still says workspace, and publish that
+  // exact tarball.
+  // Comments are dropped so the explanation of the bug doesn't match itself.
+  const workflow = readFileSync(resolve(root, ".github/workflows/release.yml"), "utf8")
+    .split("\n")
+    .filter((line) => !line.trim().startsWith("#"))
+    .join("\n");
+
+  it("packs with pnpm, never npm", () => {
+    expect(workflow).toMatch(/\bpnpm pack\b/);
+    expect(workflow).not.toMatch(/\bnpm pack\b/);
+  });
+
+  it("checks packed manifests for workspace specifiers before publishing", () => {
+    const check = workflow.indexOf("still contains a workspace: specifier");
+    const publish = workflow.indexOf("npm publish");
+    expect(check).toBeGreaterThan(-1);
+    expect(publish).toBeGreaterThan(check);
+  });
+
+  it("publishes tarballs, not package directories", () => {
+    for (const line of workflow.split("\n").filter((l) => /\bnpm publish\b/.test(l))) {
+      expect(line).toMatch(/npm publish "\$tarball"/);
+    }
+  });
+});

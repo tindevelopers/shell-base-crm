@@ -91,11 +91,24 @@ jobs:
           jq -r 'if length == 0 then "  (none — nothing to publish)" else .[] | "  \(.name)@\(.version) (\(.directory))" end' selected-packages.json
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+      # pnpm pack, not npm pack: only pnpm rewrites `workspace:` dependency
+      # specifiers to real ranges. npm leaves them in place, which shipped
+      # domain-pipeline@1.0.0 with an uninstallable `workspace:^` dependency.
       - name: Pack selected packages
         run: |
           : > checksums.txt
           for directory in $(jq -r '.[].directory' selected-packages.json); do
-            (cd "$directory" && npm pack && sha256sum ./*.tgz >> ../../checksums.txt)
+            (cd "$directory" && pnpm pack && sha256sum ./*.tgz >> ../../checksums.txt)
+          done
+      - name: Refuse any packed manifest that still says workspace
+        run: |
+          for directory in $(jq -r '.[].directory' selected-packages.json); do
+            for tarball in "$directory"/*.tgz; do
+              if tar -xOzf "$tarball" package/package.json | grep -q '"workspace:'; then
+                echo "::error::$tarball still contains a workspace: specifier"
+                exit 1
+              fi
+            done
           done
       # checksums.txt is always created by the pack step, so this step always
       # has a real workflow-produced subject; with an empty selection the
@@ -122,7 +135,10 @@ jobs:
       - name: Publish selected packages (dependency order, next tag only)
         run: |
           for directory in $(jq -r '.[].directory' selected-packages.json); do
-            (cd "$directory" && npm publish --tag next --access restricted)
+            # Publish the exact tarball that was packed and checked above.
+            for tarball in "$directory"/*.tgz; do
+              npm publish "$tarball" --tag next --access restricted
+            done
           done
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
