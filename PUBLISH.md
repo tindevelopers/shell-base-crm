@@ -38,17 +38,18 @@ registry snapshot the check compares against. The sentinel
 node scripts/check-release-target.mjs
 ```
 
-This hub's `release-targets.json` has no open pins today
-(`governance.pinsLifecycleClosed: true`). Its first release,
-**`@tindevelopers/domain-support@5.0.0`** (owner-authorized 2026-09-26), was
-published to `next` on 2026-09-26 by `release.yml` run 36255059090, and its
-pin is retired with a `missionPublishes` row. `latest` stays at `4.0.0` until
-the owner authorizes a promotion. `3.0.0` and `4.0.0` were published from
+This hub's `release-targets.json` pins two targets today: the first releases
+of **`@tindevelopers/schema-support@1.0.0`** and
+**`@tindevelopers/domain-pipeline@1.0.0`** (owner-authorized 2026-09-26), both
+to the `next` dist-tag. Its earlier release,
+**`@tindevelopers/domain-support@5.0.0`**, was published to `next` on
+2026-09-26 by `release.yml` run 36255059090, and its pin is retired with a
+`missionPublishes` row. `3.0.0` and `4.0.0` were published from
 `shell-base-admin` before this hub owned the package; both are immutable and
 must never be republished. `neverPublish` and `knownDrift` are both empty, and
 the config deliberately does **not** carry over another hub's `knownDrift`
-entry (see the note below). The next publish adds its pin and sets
-`pinsLifecycleClosed` back to `false` in its release PR.
+entry (see the note below). Each pin is retired, and `pinsLifecycleClosed` set
+back to `true` once none is open, in the evidence commit after its publish.
 
 **ON SENTINEL FAILURE: STOP and return to the orchestrator.** Do not pick a
 different version, do not retry with a bump, do not move a dist-tag to make
@@ -114,8 +115,8 @@ then, a publish must be done manually: run the sentinel locally
 `select-publishable-packages.mjs` picks every non-private package whose
 version is not on the registry, and the sentinel only gates pinned ones. So a
 package whose first release the owner has not authorized stays
-`"private": true` (today: `schema-support`, `domain-pipeline`). Its release
-PR removes the flag and adds the pin together.
+`"private": true` until then (none today). Its release PR removes the flag
+and adds the pin together.
 
 ```bash
 pnpm install --frozen-lockfile
@@ -155,6 +156,15 @@ node scripts/promote.mjs domain-support 5.0.0 --dry-run
 # Actually move the tag:
 node scripts/promote.mjs domain-support 5.0.0
 ```
+
+Moving the tag needs registry write access, so the real run goes through the
+**Promote** workflow (`.github/workflows/promote.yml`, run by hand from the
+Actions tab or `workflow_dispatch`, with `package`, `version` and `dry_run`
+inputs). It runs the same script with `NODE_AUTH_TOKEN`. Run it with
+`dry_run: true` first. After a real promotion, record it in
+`release-targets.json` (the snapshot's `distTags.latest` and a `promotions`
+row) in the next PR; until then the sentinel reports the `latest` change as
+unexplained (condition 4).
 
 Both guards run BEFORE any `npm dist-tag add`:
 

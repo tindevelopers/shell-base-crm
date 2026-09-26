@@ -1,7 +1,6 @@
 {
   "name": "@tindevelopers/domain-pipeline",
-  "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "license": "MIT",
   "description": "CRM pipeline domain: companies, deal stages, deals, tasks, notes, and activities stores over an injected Supabase client",
   "main": "./dist/index.js",
